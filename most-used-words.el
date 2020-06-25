@@ -46,8 +46,8 @@
 ;; and experience; and Bob Newell tested it for his purposes.
 
 ;;; Code:
-(eval-when (load compile)
-  (require 'cl-lib))
+
+(require 'cl-lib)
 
 (defun most-used-words-buffer-1 (n)
   "Make a list of the N most used words in buffer."
@@ -63,10 +63,10 @@
 	 do
 	   (skip-syntax-forward "w")
 	   (setf end (point))
-	   (incf (gethash (buffer-substring start end) counts 0))
+	   (cl-incf (gethash (buffer-substring start end) counts 0))
 	   (skip-syntax-forward "^w")
 	   (setf start (point))))
-    (loop for word being the hash-keys of counts
+    (cl-loop for word being the hash-keys of counts
        using (hash-values count)
        do
 	 (push (list word count) sorted-counts)
@@ -91,11 +91,13 @@ buffer."
     (setf n (string-to-number n)))
   (let ((most-used-words-buffer (get-buffer-create "*Most used words*"))
 	most-used)
-    (setf most-used (buffer-most-used-words-1 n))
-    (with-view-buffer most-used-words-buffer
+    (setf most-used (most-used-words-buffer-1 n))
+    (with-current-buffer most-used-words-buffer
+      (erase-buffer)
       (dolist (word most-used)
 	(insert (format "%s" word))
-	(newline)))))
+	(newline))
+      (pop-to-buffer (current-buffer)))))
 
 (provide 'most-used-words)
 
