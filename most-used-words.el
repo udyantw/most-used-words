@@ -71,10 +71,10 @@
 	 do
 	   (skip-syntax-forward "w")
 	   (setf end (point))
-	   (cl-incf (gethash (buffer-substring start end) counts 0))
+	   (incf (gethash (buffer-substring start end) counts 0))
 	   (skip-syntax-forward "^w")
 	   (setf start (point))))
-    (cl-loop for word being the hash-keys of counts
+    (loop for word being the hash-keys of counts
        using (hash-values count)
        do
 	 (push (list word count) sorted-counts)
@@ -99,7 +99,7 @@ buffer."
     (setf n (string-to-number n)))
   (let ((most-used-words-buffer (get-buffer-create "*Most used words*"))
 	most-used)
-    (setf most-used (most-used-words-buffer-1 n))
+    (setf most-used (buffer-most-used-words-1 n))
     (with-view-buffer most-used-words-buffer
       (dolist (word most-used)
 	(insert (format "%s" word))
