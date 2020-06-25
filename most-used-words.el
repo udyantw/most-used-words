@@ -1,7 +1,8 @@
 ;;; most-used-words.el --- Display most used words in buffer
+;;; -*- lexical-binding: t; -*-
 
 ;; Author: Udyant Wig <udyant.wig@gmail.com>
-;; URL:
+;; URL: https://bitbucket.org/udyantw/most-used-words
 ;; Version: 0.1
 ;; Package-Requires: ((emacs "24.3"))
 ;; Keywords: convenience, wp
@@ -56,6 +57,7 @@
 					  :key #'cl-second)))
     (mapcar #'cl-first (cl-subseq sorted-counts 0 n))))
 
+;;;###autoload
 (cl-defun most-used-words-buffer (&optional n)
   "Determine the N (default 3) most used words in the current
 buffer."
