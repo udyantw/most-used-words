@@ -71,10 +71,10 @@
 	 do
 	   (skip-syntax-forward "w")
 	   (setf end (point))
-	   (incf (gethash (buffer-substring start end) counts 0))
+	   (cl-incf (gethash (buffer-substring start end) counts 0))
 	   (skip-syntax-forward "^w")
 	   (setf start (point))))
-    (loop for word being the hash-keys of counts
+    (cl-loop for word being the hash-keys of counts
        using (hash-values count)
        do
 	 (push (list word count) sorted-counts)
