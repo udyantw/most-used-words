@@ -4,7 +4,7 @@
 ;; Copyright (C) 2020 Udyant Wig
 ;;
 ;; Author: Udyant Wig <udyant.wig@gmail.com>
-;; URL: https://bitbucket.org/udyantw/most-used-words
+;; URL: https://github.com/udyantw/most-used-words
 ;; Version: 0.1
 ;; Package-Requires: ((emacs "24.3"))
 ;; Keywords: convenience, wp
