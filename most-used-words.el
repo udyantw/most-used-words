@@ -83,7 +83,7 @@
     (mapcar #'cl-first (cl-subseq sorted-counts 0 n))))
 
 ;;;###autoload
-(cl-defun most-used-words-buffer (&optional n)
+(defun most-used-words-buffer (&optional n)
   "Determine the N (default 3) most used words in the current
 buffer."
   (interactive (list (completing-read
