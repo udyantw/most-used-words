@@ -49,7 +49,7 @@
 
 (require 'cl-lib)
 
-(cl-defmacro with-view-buffer (buffer &body body)
+(cl-defmacro most-used-words-with-view-buffer (buffer &body body)
   `(progn
      (with-current-buffer ,buffer
        ,@body)
