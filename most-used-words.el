@@ -84,8 +84,7 @@
 
 ;;;###autoload
 (defun most-used-words-buffer (&optional n)
-  "Determine the N (default 3) most used words in the current
-buffer."
+  "Show the N (default 3) most used words in the current buffer."
   (interactive (list (completing-read
 		      "How many words? (default 3) "
 		      nil
