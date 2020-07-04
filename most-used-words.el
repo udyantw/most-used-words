@@ -99,7 +99,7 @@
     (setf n (string-to-number n)))
   (let ((most-used-words-buffer (get-buffer-create "*Most used words*"))
 	(most-used (most-used-words-buffer-1 n)))
-    (with-view-buffer most-used-words-buffer
+    (most-used-words-with-view-buffer most-used-words-buffer
       (dolist (word most-used)
 	(insert (format "%s" word))
 	(newline)))))
