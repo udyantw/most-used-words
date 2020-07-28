@@ -58,7 +58,7 @@
 			       nil
 			       #'kill-buffer)))
 
-(defun most-used-words-buffer-1 (n)
+(defun most-used-words-buffer-1 (n &optional show-percentages-p)
   "Make a list of the N most used words in buffer."
   (let ((counts (make-hash-table :test #'equal))
 	sorted-counts
@@ -81,10 +81,12 @@
 	 (push (list word count) sorted-counts)
        finally (setf sorted-counts (cl-sort sorted-counts #'>
 					  :key #'cl-second)))
-    (mapcar #'cl-first (cl-subseq sorted-counts 0 n))))
+    (if show-percentages-p
+	(list (cl-subseq sorted-counts 0 n) (hash-table-count counts))
+	(mapcar #'cl-first (cl-subseq sorted-counts 0 n)))))
 
 ;;;###autoload
-(defun most-used-words-buffer (&optional n)
+(defun most-used-words-buffer (&optional n show-percentages-p)
   "Show the N (default 3) most used words in the current buffer."
   (interactive (list (completing-read
 		      "How many words? (default 3) "
@@ -98,11 +100,18 @@
   (unless (numberp n)
     (setf n (string-to-number n)))
   (let ((most-used-words-buffer (get-buffer-create "*Most used words*"))
-	(most-used (most-used-words-buffer-1 n)))
+	(most-used (most-used-words-buffer-1 n show-percentages-p)))
     (most-used-words-with-view-buffer most-used-words-buffer
-      (dolist (word most-used)
-	(insert (format "%s" word))
-	(newline)))))
+      (if show-percentages-p
+	  (let ((word-counts (first most-used))
+		(total-count (float (second most-used))))
+	    (loop for (word count) in word-counts
+	       do
+		 (insert (format "%s    %d    %f%%" word count (* 100 (/ count total-count))))
+		 (newline)))
+	  (dolist (word most-used)
+	    (insert (format "%s" word))
+	    (newline))))))
 
 (provide 'most-used-words)
 
