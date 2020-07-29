@@ -59,7 +59,10 @@
 			       #'kill-buffer)))
 
 (defun most-used-words-buffer-1 (n &optional show-percentages-p)
-  "Make a list of the N most used words in buffer."
+  "Make a list of the N most used words in buffer.
+
+Optional argument SHOW-PERCENTAGES-P displays word counts and
+percentages."
   (let ((counts (make-hash-table :test #'equal))
 	(total-count 0)
 	sorted-counts
