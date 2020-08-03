@@ -6,6 +6,10 @@ goes through the current buffer keeping a count of words, as defined by
 the default syntax table.  Once done, it displays a buffer of the most
 frequently used words.
 
+With a prefix argument
+    C-u M-x most-used-words-buffer
+shows word counts and percentages.
+
 I wrote the following functions, and the wonderful posters at
 gnu.emacs.help reviewed it.
 Part of a discussion thread on gnu.emacs.help follows the
