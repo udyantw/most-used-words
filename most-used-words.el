@@ -101,7 +101,7 @@ percentages."
 	  (most-used-words-with-view-buffer most-used-words-buffer
             (let ((word-counts (cl-first most-used))
 		  (total-count (float (cl-second most-used))))
-	      (loop for (word count) in word-counts
+	      (cl-loop for (word count) in word-counts
 		 do
 		   (insert (format "%-24s    %5d    %f%%" word count (* 100 (/ count total-count))))
 		   (newline)))))
