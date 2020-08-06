@@ -62,6 +62,7 @@
   :group 'most-used-words)
 
 (cl-defmacro most-used-words-with-view-buffer (buffer &body body)
+  "Default BUFFER for this package to display and execute BODY."
   `(progn
      (with-current-buffer ,buffer ,@body)
      (view-buffer-other-window ,buffer nil #'kill-buffer)))
