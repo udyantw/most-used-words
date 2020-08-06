@@ -89,13 +89,14 @@
   "Form used word data base on N count of data displayed."
   (let* ((most-used (most-used-words-buffer-1 n t))
          (word-counts (cl-first most-used))
-         (total-count (float (cl-second most-used)))
-         (data-lst '())  data-item)
-    (cl-loop for (word count) in word-counts
+         (total-count (float (cl-second most-used))))
+    (cl-loop with data-list = '()
+             with data-item = nil
+             for (word count) in word-counts
              do
-             (setq data-item (most-used-words--form-data word count (* 100 (/ count total-count))))
-             (push data-item data-lst))
-    (reverse data-lst)))
+             (setf data-item (most-used-words--form-data word count (* 100 (/ count total-count))))
+             (push data-item data-list)
+             finally (return (nreverse data-list)))))
 
 ;;; Core
 
