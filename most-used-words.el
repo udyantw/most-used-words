@@ -105,23 +105,18 @@ Optional argument SHOW-PERCENTAGES-P displays word counts and percentages."
 
 Optional argument SHOW-COUNTS-P also shows the counts and percentages."
   (let ((most-used-words-buffer (get-buffer-create "*Most used words*"))
-        most-used)
-    (if show-counts-p
-        (progn
-          (setq most-used (most-used-words-buffer-1 n t))
-          (most-used-words-with-view-buffer
-           most-used-words-buffer
-           (let ((word-counts (cl-first most-used))
-                 (total-count (float (cl-second most-used))))
-             (cl-loop for (word count) in word-counts
-                      do
-                      (insert (format "%-24s    %5d    %f%%" word count (* 100 (/ count total-count))))
-                      (newline)))))
-      (setq most-used (most-used-words-buffer-1 n))
-      (most-used-words-with-view-buffer most-used-words-buffer
-                                        (dolist (word most-used)
-                                          (insert (format "%s" word))
-                                          (newline))))))
+        (most-used (most-used-words-data n))
+        word count percent)
+    (most-used-words-with-view-buffer
+     most-used-words-buffer
+     (dolist (word-data most-used)
+       (setq word (plist-get word-data :word)
+             count (plist-get word-data :count)
+             percent (plist-get word-data :percent))
+       (if show-counts-p
+           (insert (format "%-24s    %5d    %f%%" word count percent))
+         (insert (format "%s" word)))
+       (newline)))))
 
 ;;;###autoload
 (defun most-used-words-buffer (&optional n)
