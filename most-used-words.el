@@ -146,7 +146,7 @@ Optional argument SHOW-COUNTS-P also shows the counts and percentages."
                 count (plist-get word-data :count)
                 percent (plist-get word-data :percent))
           (if show-counts-p
-              (insert (format "%-24s    %5d    %f%%" word count percent))
+              (insert (format "%-24s    %5d    %0.2f%%" word count percent))
             (insert (format "%s" word)))
           (newline))))
       ('table
@@ -170,7 +170,7 @@ Optional argument SHOW-COUNTS-P also shows the counts and percentages."
             (word (plist-get word-data :word))
             (count (plist-get word-data :count))
             (percent (plist-get word-data :percent)))
-        (push (concat (format "%s" percent) "%") new-entry-value)  ; Percentages
+        (push (concat (format "%0.2f" percent) "%") new-entry-value)  ; Percentages
         (push (format "%s" count) new-entry-value)  ; Counts
         (push word new-entry-value)  ; Word
         (push (vconcat new-entry-value) new-entry)  ; Turn into vector.
