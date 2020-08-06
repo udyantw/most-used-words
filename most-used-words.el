@@ -51,6 +51,7 @@
 (require 'cl-lib)
 
 (cl-defmacro most-used-words-with-view-buffer (buffer &body body)
+  "Execute BODY in BUFFER, and view it in another window."
   `(progn
      (with-current-buffer ,buffer
        ,@body)
