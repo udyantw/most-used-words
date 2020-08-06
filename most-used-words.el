@@ -158,9 +158,27 @@ Optional argument SHOW-COUNTS-P also shows the counts and percentages."
 
 (defconst most-used-words--format
   (vector (list "Word" 15 t)
-          (list "Counts" 10 t)
-          (list "Percentages" 10 t))
+          (list "Counts" 10 #'most-used-words--sort-count)
+          (list "Percentages" 10 #'most-used-words--sort-percent))
   "Format to assign to `tabulated-list-format' variable.")
+
+(defun most-used-words--sort-percent (var1 var2)
+  "Sort percentages entries, VAR1 and VAR2."
+  (let* ((percent-index 2)
+         (cnt1 (elt (nth 1 var1) percent-index))
+         (cnt2 (elt (nth 1 var2) percent-index)))
+    (setq cnt1 (string-to-number cnt1))
+    (setq cnt2 (string-to-number cnt2))
+    (< cnt1 cnt2)))
+
+(defun most-used-words--sort-count (var1 var2)
+  "Sort counts entries, VAR1 and VAR2."
+  (let* ((count-index 1)
+         (cnt1 (elt (nth 1 var1) count-index))
+         (cnt2 (elt (nth 1 var2) count-index)))
+    (setq cnt1 (string-to-number cnt1))
+    (setq cnt2 (string-to-number cnt2))
+    (< cnt1 cnt2)))
 
 (defun most-used-words--get-entries ()
   "Data entries for most used words."
