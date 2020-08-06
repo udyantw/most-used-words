@@ -50,6 +50,17 @@
 
 (require 'cl-lib)
 
+(defgroup most-used-words nil
+  "Display most used words in buffer."
+  :prefix "most-used-words-"
+  :group 'tool
+  :link '(url-link :tag "Repository" "https://github.com/udyantw/most-used-words"))
+
+(defcustom most-used-words-word-display 3
+  "Default word data to display."
+  :type 'integer
+  :group 'most-used-words)
+
 (cl-defmacro most-used-words-with-view-buffer (buffer &body body)
   `(progn
      (with-current-buffer ,buffer ,@body)
@@ -122,8 +133,11 @@ Optional argument SHOW-COUNTS-P also shows the counts and percentages."
 (defun most-used-words-buffer (&optional n)
   "Show the N (default 3) most used words in the current buffer."
   (interactive (list (completing-read
-                      "How many words? (default 3) "
-                      nil nil nil nil nil 3 nil)))
+                      (format "How many words? (default %s) "
+                              most-used-words-word-display)
+                      nil nil nil nil nil
+                      most-used-words-word-display
+                      nil)))
   (unless (numberp n) (setf n (string-to-number n)))
   (most-used-words-buffer-aux n nil))
 
@@ -131,8 +145,11 @@ Optional argument SHOW-COUNTS-P also shows the counts and percentages."
 (defun most-used-words-buffer-with-counts (&optional n)
   "Show with counts the N (default 3) most used words in the current buffer."
   (interactive (list (completing-read
-                      "How many words? (default 3) "
-                      nil nil nil nil nil 3 nil)))
+                      (format "How many words? (default %s) "
+                              most-used-words-word-display)
+                      nil nil nil nil nil
+                      most-used-words-word-display
+                      nil)))
   (unless (numberp n) (setf n (string-to-number n)))
   (most-used-words-buffer-aux n t))
 
