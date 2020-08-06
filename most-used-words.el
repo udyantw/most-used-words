@@ -84,6 +84,22 @@ Optional argument SHOW-PERCENTAGES-P displays word counts and percentages."
         (list (cl-subseq sorted-counts 0 n) total-count)
       (mapcar #'cl-first (cl-subseq sorted-counts 0 n)))))
 
+(defun most-used-words--form-data (word count percent)
+  "Form the plist data item with WORD, COUNT, PERCENT."
+  (list :word word :count count :percent percent))
+
+(defun most-used-words-data (n)
+  "Form used word data base on N count of data displayed."
+  (let* ((most-used (most-used-words-buffer-1 n t))
+         (word-counts (cl-first most-used))
+         (total-count (float (cl-second most-used)))
+         (data-lst '())  data-item)
+    (cl-loop for (word count) in word-counts
+             do
+             (setq data-item (most-used-words--form-data word count (* 100 (/ count total-count))))
+             (push data-item data-lst))
+    (reverse data-lst)))
+
 (defun most-used-words-buffer-aux (&optional n show-counts-p)
   "Show the N (default 3) most used words in the current buffer.
 
@@ -111,7 +127,8 @@ Optional argument SHOW-COUNTS-P also shows the counts and percentages."
 (defun most-used-words-buffer (&optional n)
   "Show the N (default 3) most used words in the current buffer."
   (interactive (list (completing-read
-                      "How many words? (default 3) " nil nil nil nil nil 3 nil)))
+                      "How many words? (default 3) "
+                      nil nil nil nil nil 3 nil)))
   (unless (numberp n) (setf n (string-to-number n)))
   (most-used-words-buffer-aux n nil))
 
@@ -119,7 +136,8 @@ Optional argument SHOW-COUNTS-P also shows the counts and percentages."
 (defun most-used-words-buffer-with-counts (&optional n)
   "Show with counts the N (default 3) most used words in the current buffer."
   (interactive (list (completing-read
-                      "How many words? (default 3) " nil nil nil nil nil 3 nil)))
+                      "How many words? (default 3) "
+                      nil nil nil nil nil 3 nil)))
   (unless (numberp n) (setf n (string-to-number n)))
   (most-used-words-buffer-aux n t))
 
