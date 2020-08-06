@@ -61,11 +61,31 @@
   :type 'integer
   :group 'most-used-words)
 
+;;; Util
+
 (cl-defmacro most-used-words-with-view-buffer (buffer &body body)
   "Default BUFFER for this package to display and execute BODY."
   `(progn
      (with-current-buffer ,buffer ,@body)
      (view-buffer-other-window ,buffer nil #'kill-buffer)))
+
+(defun most-used-words--form-data (word count percent)
+  "Form the plist data item with WORD, COUNT, PERCENT."
+  (list :word word :count count :percent percent))
+
+(defun most-used-words-data (n)
+  "Form used word data base on N count of data displayed."
+  (let* ((most-used (most-used-words-buffer-1 n t))
+         (word-counts (cl-first most-used))
+         (total-count (float (cl-second most-used)))
+         (data-lst '())  data-item)
+    (cl-loop for (word count) in word-counts
+             do
+             (setq data-item (most-used-words--form-data word count (* 100 (/ count total-count))))
+             (push data-item data-lst))
+    (reverse data-lst)))
+
+;;; Core
 
 (defun most-used-words-buffer-1 (n &optional show-percentages-p)
   "Make a list of the N most used words in buffer.
@@ -96,22 +116,6 @@ Optional argument SHOW-PERCENTAGES-P displays word counts and percentages."
         (list (cl-subseq sorted-counts 0 n) total-count)
       (mapcar #'cl-first (cl-subseq sorted-counts 0 n)))))
 
-(defun most-used-words--form-data (word count percent)
-  "Form the plist data item with WORD, COUNT, PERCENT."
-  (list :word word :count count :percent percent))
-
-(defun most-used-words-data (n)
-  "Form used word data base on N count of data displayed."
-  (let* ((most-used (most-used-words-buffer-1 n t))
-         (word-counts (cl-first most-used))
-         (total-count (float (cl-second most-used)))
-         (data-lst '())  data-item)
-    (cl-loop for (word count) in word-counts
-             do
-             (setq data-item (most-used-words--form-data word count (* 100 (/ count total-count))))
-             (push data-item data-lst))
-    (reverse data-lst)))
-
 (defun most-used-words-buffer-aux (&optional n show-counts-p)
   "Show the N (default 3) most used words in the current buffer.
 
@@ -129,6 +133,8 @@ Optional argument SHOW-COUNTS-P also shows the counts and percentages."
            (insert (format "%-24s    %5d    %f%%" word count percent))
          (insert (format "%s" word)))
        (newline)))))
+
+;;; Entry
 
 ;;;###autoload
 (defun most-used-words-buffer (&optional n)
