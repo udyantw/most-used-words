@@ -52,95 +52,75 @@
 
 (cl-defmacro most-used-words-with-view-buffer (buffer &body body)
   `(progn
-     (with-current-buffer ,buffer
-       ,@body)
-     (view-buffer-other-window ,buffer
-			       nil
-			       #'kill-buffer)))
+     (with-current-buffer ,buffer ,@body)
+     (view-buffer-other-window ,buffer nil #'kill-buffer)))
 
 (defun most-used-words-buffer-1 (n &optional show-percentages-p)
   "Make a list of the N most used words in buffer.
 
-Optional argument SHOW-PERCENTAGES-P displays word counts and
-percentages."
+Optional argument SHOW-PERCENTAGES-P displays word counts and percentages."
   (let ((counts (make-hash-table :test #'equal))
-	(total-count 0)
-	sorted-counts
-	start
-	end)
+        (total-count 0) sorted-counts
+        start end)
     (save-excursion
       (goto-char (point-min))
       (skip-syntax-forward "^w")
       (setf start (point))
       (cl-loop until (eobp)
-	 do
-	   (skip-syntax-forward "w")
-	   (setf end (point))
-	   (cl-incf (gethash (buffer-substring start end) counts 0))
-	   (skip-syntax-forward "^w")
-	   (setf start (point))
-	   (cl-incf total-count)))
+               do
+               (skip-syntax-forward "w")
+               (setf end (point))
+               (cl-incf (gethash (buffer-substring start end) counts 0))
+               (skip-syntax-forward "^w")
+               (setf start (point))
+               (cl-incf total-count)))
     (cl-loop for word being the hash-keys of counts
-       using (hash-values count)
-       do
-	 (push (list word count) sorted-counts)
-       finally (setf sorted-counts (cl-sort sorted-counts #'>
-					  :key #'cl-second)))
+             using (hash-values count)
+             do
+             (push (list word count) sorted-counts)
+             finally (setf sorted-counts (cl-sort sorted-counts #'>
+                                                  :key #'cl-second)))
     (if show-percentages-p
-	(list (cl-subseq sorted-counts 0 n) total-count)
+        (list (cl-subseq sorted-counts 0 n) total-count)
       (mapcar #'cl-first (cl-subseq sorted-counts 0 n)))))
 
 (defun most-used-words-buffer-aux (&optional n show-counts-p)
   "Show the N (default 3) most used words in the current buffer.
 
-Optional argument SHOW-COUNTS-P also shows the counts and
-percentages."
-  (let ((most-used-words-buffer (get-buffer-create "*Most used words*")))
+Optional argument SHOW-COUNTS-P also shows the counts and percentages."
+  (let ((most-used-words-buffer (get-buffer-create "*Most used words*"))
+        most-used)
     (if show-counts-p
-	(let ((most-used (most-used-words-buffer-1 n t)))
-	  (most-used-words-with-view-buffer most-used-words-buffer
-            (let ((word-counts (cl-first most-used))
-		  (total-count (float (cl-second most-used))))
-	      (cl-loop for (word count) in word-counts
-		 do
-		   (insert (format "%-24s    %5d    %f%%" word count (* 100 (/ count total-count))))
-		   (newline)))))
-      (let ((most-used (most-used-words-buffer-1 n)))
-	(most-used-words-with-view-buffer most-used-words-buffer
-          (dolist (word most-used)
-	    (insert (format "%s" word))
-	    (newline)))))))
+        (progn
+          (setq most-used (most-used-words-buffer-1 n t))
+          (most-used-words-with-view-buffer
+           most-used-words-buffer
+           (let ((word-counts (cl-first most-used))
+                 (total-count (float (cl-second most-used))))
+             (cl-loop for (word count) in word-counts
+                      do
+                      (insert (format "%-24s    %5d    %f%%" word count (* 100 (/ count total-count))))
+                      (newline)))))
+      (setq most-used (most-used-words-buffer-1 n))
+      (most-used-words-with-view-buffer most-used-words-buffer
+                                        (dolist (word most-used)
+                                          (insert (format "%s" word))
+                                          (newline))))))
 
 ;;;###autoload
 (defun most-used-words-buffer (&optional n)
   "Show the N (default 3) most used words in the current buffer."
   (interactive (list (completing-read
-		      "How many words? (default 3) "
-		      nil
-		      nil
-		      nil
-		      nil
-		      nil
-		      3
-		      nil)))
-  (unless (numberp n)
-    (setf n (string-to-number n)))
+                      "How many words? (default 3) " nil nil nil nil nil 3 nil)))
+  (unless (numberp n) (setf n (string-to-number n)))
   (most-used-words-buffer-aux n nil))
 
 ;;;###autoload
 (defun most-used-words-buffer-with-counts (&optional n)
-    "Show with counts the N (default 3) most used words in the current buffer."
+  "Show with counts the N (default 3) most used words in the current buffer."
   (interactive (list (completing-read
-		      "How many words? (default 3) "
-		      nil
-		      nil
-		      nil
-		      nil
-		      nil
-		      3
-		      nil)))
-  (unless (numberp n)
-    (setf n (string-to-number n)))
+                      "How many words? (default 3) " nil nil nil nil nil 3 nil)))
+  (unless (numberp n) (setf n (string-to-number n)))
   (most-used-words-buffer-aux n t))
 
 (provide 'most-used-words)
