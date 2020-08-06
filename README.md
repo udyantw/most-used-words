@@ -1,14 +1,16 @@
 Identify the most frequently used words in a buffer.
 
 The command
-  M-x most-used-words-buffer
+  `M-x most-used-words-buffer`
 goes through the current buffer keeping a count of words, as defined by
 the default syntax table.  Once done, it displays a buffer of the most
 frequently used words.
 
 The command
-  M-x most-used-words-buffer-with-counts
+  `M-x most-used-words-buffer-with-counts`
 does as the above, but also shows counts and percentages.
+
+---
 
 I wrote the following functions, and the wonderful posters at
 gnu.emacs.help reviewed it.

@@ -76,7 +76,7 @@
 ;;; Util
 
 (cl-defmacro most-used-words-with-view-buffer (buffer &body body)
-  "Default BUFFER for this package to display and execute BODY."
+  "Execute BODY in BUFFER, and view it in another window."
   `(progn
      (with-current-buffer ,buffer ,@body)
      (view-buffer-other-window ,buffer nil #'kill-buffer)))
