@@ -204,7 +204,7 @@ Optional argument SHOW-COUNTS-P also shows the counts and percentages."
   :group 'most-used-words
   (setq tabulated-list-format most-used-words--format)
   (setq tabulated-list-padding 1)
-  (setq tabulated-list-sort-key (cons "Counts" nil))
+  (setq tabulated-list-sort-key (cons "Counts" t))
   (tabulated-list-init-header)
   (setq tabulated-list-entries (most-used-words--get-entries))
   (tabulated-list-print t))
