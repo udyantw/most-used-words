@@ -62,7 +62,7 @@
   :type 'integer
   :group 'most-used-words)
 
-(defcustom most-used-words-display-type 'buffer
+(defcustom most-used-words-display-type 'table
   "The method to display most used words."
   :type '(choice (const :tag "buffer" buffer)
                  (const :tag "table" table))
@@ -107,7 +107,9 @@
 Optional argument SHOW-PERCENTAGES-P displays word counts and percentages."
   (with-current-buffer most-used-words--buffer
     (let ((counts (make-hash-table :test #'equal))
-          (total-count 0) sorted-counts
+          (total-count 0)
+	  sorted-counts
+	  uniques-count
           start end)
       (save-excursion
         (goto-char (point-min))
@@ -127,6 +129,11 @@ Optional argument SHOW-PERCENTAGES-P displays word counts and percentages."
                (push (list word count) sorted-counts)
                finally (setf sorted-counts (cl-sort sorted-counts #'>
                                                     :key #'cl-second)))
+      (setf uniques-count (length sorted-counts))
+      (when (< uniques-count n)
+	(message "You chose to show more words than there are unique words.  Showing the maximum possible.")
+	(setf n uniques-count
+	      most-used-words-word-display uniques-count))
       (if show-percentages-p
           (list (cl-subseq sorted-counts 0 n) total-count)
         (mapcar #'cl-first (cl-subseq sorted-counts 0 n))))))
