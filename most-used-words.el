@@ -49,6 +49,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'tabulated-list)
 
 (defgroup most-used-words nil
   "Display most used words in buffer."
