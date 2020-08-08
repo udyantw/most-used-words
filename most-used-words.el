@@ -131,7 +131,8 @@ Optional argument SHOW-PERCENTAGES-P displays word counts and percentages."
                                               :key #'cl-second)))
       (setf uniques-count (length sorted-counts))
       (when (< uniques-count n)
-        (message "You chose to show more words than there are unique words.  Showing the maximum possible.")
+        (message "You chose to show %d words, which are more than the number of unique words.
+Showing the maximum possible (%d)." n uniques-count)
         (setf n uniques-count))
       (if show-percentages-p
           (list (cl-subseq sorted-counts 0 n) total-count)
