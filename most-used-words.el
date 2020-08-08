@@ -92,12 +92,12 @@
          (word-counts (cl-first most-used))
          (total-count (float (cl-second most-used))))
     (cl-loop with data-list = '()
-             with data-item = nil
-             for (word count) in word-counts
-             do
-             (setf data-item (most-used-words--form-data word count (* 100 (/ count total-count))))
-             (push data-item data-list)
-             finally (return (nreverse data-list)))))
+       with data-item = nil
+       for (word count) in word-counts
+       do
+         (setf data-item (most-used-words--form-data word count (* 100 (/ count total-count))))
+         (push data-item data-list)
+       finally (return (nreverse data-list)))))
 
 ;;; Core
 
@@ -116,19 +116,19 @@ Optional argument SHOW-PERCENTAGES-P displays word counts and percentages."
         (skip-syntax-forward "^w")
         (setf start (point))
         (cl-loop until (eobp)
-                 do
-                 (skip-syntax-forward "w")
-                 (setf end (point))
-                 (cl-incf (gethash (buffer-substring start end) counts 0))
-                 (skip-syntax-forward "^w")
-                 (setf start (point))
-                 (cl-incf total-count)))
+           do
+             (skip-syntax-forward "w")
+             (setf end (point))
+             (cl-incf (gethash (buffer-substring start end) counts 0))
+             (skip-syntax-forward "^w")
+             (setf start (point))
+             (cl-incf total-count)))
       (cl-loop for word being the hash-keys of counts
-               using (hash-values count)
-               do
-               (push (list word count) sorted-counts)
-               finally (setf sorted-counts (cl-sort sorted-counts #'>
-                                                    :key #'cl-second)))
+         using (hash-values count)
+         do
+           (push (list word count) sorted-counts)
+         finally (setf sorted-counts (cl-sort sorted-counts #'>
+                                              :key #'cl-second)))
       (setf uniques-count (length sorted-counts))
       (when (< uniques-count n)
         (message "You chose to show more words than there are unique words.  Showing the maximum possible.")
@@ -158,8 +158,9 @@ Optional argument SHOW-COUNTS-P also shows the counts and percentages."
             (insert (format "%s" word)))
           (newline))))
       ('table
-       (pop-to-buffer most-used-words--buffer-name)
-       (most-used-words-mode)))))
+       (pop-to-buffer most-used-words-buffer)
+       (let ((most-used-words-word-display n))
+	 (most-used-words-mode))))))
 
 ;;; Tabluldated List
 
@@ -187,9 +188,9 @@ Optional argument SHOW-COUNTS-P also shows the counts and percentages."
     (setq cnt2 (string-to-number cnt2))
     (< cnt1 cnt2)))
 
-(defun most-used-words--get-entries ()
-  "Data entries for most used words."
-  (let ((most-used (most-used-words-data most-used-words-word-display))
+(defun most-used-words--get-entries (n)
+  "Data entries for N most used words."
+  (let ((most-used (most-used-words-data n))
         (entries '()) (id-count 0))
     (dolist (word-data most-used)
       (let ((new-entry '()) (new-entry-value '())
@@ -213,7 +214,7 @@ Optional argument SHOW-COUNTS-P also shows the counts and percentages."
   (setq tabulated-list-padding 1)
   (setq tabulated-list-sort-key (cons "Counts" t))
   (tabulated-list-init-header)
-  (setq tabulated-list-entries (most-used-words--get-entries))
+  (setq tabulated-list-entries (most-used-words--get-entries most-used-words-word-display))
   (tabulated-list-print t))
 
 ;;; Entry
