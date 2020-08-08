@@ -25,5 +25,5 @@ Eli Zaretskii shared of their Unix wisdom and experience; and Bob Newell
 tested it for his purposes.
 
 The original version showed the results in a separate plain buffer.
-Jen-Chieh Shen added functionality to show the results and sort them in
-a nice table using tabulated-lists.
+[Jen-Chieh Shen](https://github.com/jcs090218) added functionality to
+show the results and sort them in a nice table using tabulated-lists.
