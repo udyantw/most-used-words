@@ -12,10 +12,9 @@ does as the above, but also shows counts and percentages.
 
 ---
 
-I wrote the following functions, and the wonderful posters at
-gnu.emacs.help reviewed it.
-Part of a discussion thread on gnu.emacs.help follows the
-development:
+I wrote the core of this package some time ago, and the wonderful
+posters at gnu.emacs.help reviewed it.  Part of a discussion thread on
+gnu.emacs.help follows the development:
 https://groups.google.com/d/topic/gnu.emacs.help/nC8IsIuNeek/discussion
 
 Special thanks are due to Stefan Monnier and Eric Abrahamsen, who made
